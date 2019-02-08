@@ -22,26 +22,22 @@
 // rs485 transceiver's transmit enable pin (often called TE or DE).
 // can be tied together with negated receive enable pin to disable local echo
 // (often called /RE). this pin can freely be chosen.
-#define RS485_TE  13
+const uint8_t RS485_TE = 13;
 
 // RS485_RX:
 // RX pin of serial 1 on atmega328pb. if /RE on rs485 transceiver is used then
 // there should be pullup resistor on RX or a least a weak pullup configured on
 // the RX pin (see below), as the RO pin of the rs485 transceiver becomes high
 // impedance if the receiver is disabled.
-#define RS485_RX  12
-
-// RS485_TX:
-// TX pin of serial 1 on atmega328pb. this define is just for your convenience.
-#define RS485_TX  11
+const uint8_t RS485_RX = 12;
 
 // RS485_BPS:
 // baud rate/bps on rs485 port
-#define RS485_BPS  9600
+const uint32_t RS485_BPS = 9600;
 
 // RS232_BPS:
 // baud rate/bps on rs232 port
-#define RS232_BPS  115200
+const uint32_t RS232_BPS = 115200;
 
 
 /*//////////////////////////////////////////////////////////////////////////////
@@ -56,19 +52,19 @@ TXD:                      X__X__X__X_..._X__X
                          ____________...______
 TE:   __________..._____|                     |________
 
-      __________...______                 _____________ 
+      __________...______                 _____________
 UDRE:                    ||__|__|__|_..._|
 
       __________...______                      ________
 TXC:                     |___________...______|
 
       -----RX---...-----|-------TX---...------|---RX---
-      
-RXD:  USART Receive Data  
-TXD:  USART Transmit Data  
-TE:   Transceiver Transmit Enable  
-UDRE: USART Data Register Empty  
-TXC:  USART Transmit Complete  
+
+RXD:  USART Receive Data
+TXD:  USART Transmit Data
+TE:   Transceiver Transmit Enable
+UDRE: USART Data Register Empty
+TXC:  USART Transmit Complete
 */
 
 
@@ -101,15 +97,15 @@ TXC:  USART Transmit Complete
       |             |  /               |                     | | 1W
       |             |/                 * GND                 | |
   ----+                                                       |
-                                                              * GND           
-                                                              
+                                                              * GND
+
   excellent information about the electrical aspects of RS485 like proper
   termination, biasing and shielding can be found here:
   http://support.fccps.cz/download/adv/frr/RS485/RS485.html
   this covers additionally the aspects of ESD-protection:
   https://www.renesas.com/eu/en/www/doc/whitepapers/interface/rs-485-transceiver-tutorial.pdf
   https://www.renesas.com/eu/en/www/doc/whitepapers/interface/rs-485-transceiver-tutorial_de.pdf
-  
+
   */
 
 ////////////////////////////////////////////////////////////////////////////////
