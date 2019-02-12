@@ -91,8 +91,7 @@ typedef uint8_t rx_buffer_index_t;
 #define SERIAL_7O2 0x3C
 #define SERIAL_8O2 0x3E
 
-class RS485HwSerial : public Stream
-{
+class RS485HwSerial : public Stream {
   protected:
     volatile uint8_t * const _ubrrh;
     volatile uint8_t * const _ubrrl;
@@ -121,9 +120,9 @@ class RS485HwSerial : public Stream
       volatile uint8_t *ubrrh, volatile uint8_t *ubrrl,
       volatile uint8_t *ucsra, volatile uint8_t *ucsrb,
       volatile uint8_t *ucsrc, volatile uint8_t *udr);
-    void begin(unsigned long baud) { begin(baud, SERIAL_8N1, 0xFF); };
-    void begin(unsigned long baud, uint8_t config) { begin(baud, config, 0xFF); };
-    void begin(unsigned long baud, uint8_t config, uint8_t rs485TEpin);
+    void begin(unsigned long baud) { begin(baud, SERIAL_8N1); };
+    void begin(unsigned long baud, uint8_t config);
+    void transmitterEnable(uint8_t rs485TEpin = 0xFF);
     void end();
     virtual int available(void);
     virtual int peek(void);

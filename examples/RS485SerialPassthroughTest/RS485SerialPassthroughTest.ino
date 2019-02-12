@@ -112,8 +112,10 @@ TXC:  USART Transmit Complete
 void setup() {
   RS485HwSerial0.begin(RS232_BPS);
 
-  // rs485 transceiver enable pin as 3rd parameter
-  RS485HwSerial1.begin(RS485_BPS, SERIAL_8N1, RS485_TE);
+  // rs485 transceiver transmitter enable pin
+  RS485HwSerial1.transmitterEnable(RS485_TE);
+  // rs485 uart setup
+  RS485HwSerial1.begin(RS485_BPS);
   // enable weak pull-up on RX pin
   pinMode(RS485_RX, INPUT_PULLUP);
 

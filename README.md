@@ -36,10 +36,12 @@ another extra delay for the last byte to be shifted out
 
 
 void setup() {
-  // RS485 transceiver enable pin as 3rd parameter
-  RS485HwSerial1.begin(RS485_BPS, SERIAL_8N1, RS485_TE);
+  // rs485 transceiver transmitter enable pin
+  RS485HwSerial1.transmitterEnable(RS485_TE);
+  // rs485 uart setup
+  RS485HwSerial1.begin(RS485_BPS);
 
-  // enable weak pull-up on RX pin
+  // enable weak pull-up on RX pin (better use pull-up resistor)
   pinMode(RS485_RX, INPUT_PULLUP);
 }
 

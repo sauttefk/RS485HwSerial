@@ -93,14 +93,12 @@ RS485HwSerial::RS485HwSerial(
     _ucsra(ucsra), _ucsrb(ucsrb), _ucsrc(ucsrc),
     _udr(udr),
     _rx_buffer_head(0), _rx_buffer_tail(0),
-    _tx_buffer_head(0), _tx_buffer_tail(0)
-{
+    _tx_buffer_head(0), _tx_buffer_tail(0) {
 }
 
 // Actual interrupt handlers //////////////////////////////////////////////////////////////
 
-void RS485HwSerial::_rx_complete_irq(void)
-{
+void RS485HwSerial::_rx_complete_irq(void) {
   if (bit_is_clear(*_ucsra, UPE0)) {
     // No Parity error, read byte and store it in the buffer if there is
     // room
@@ -122,8 +120,7 @@ void RS485HwSerial::_rx_complete_irq(void)
 }
 
 
-void RS485HwSerial::_tx_complete_irq(void)
-{
+void RS485HwSerial::_tx_complete_irq(void) {
   // interrupt on end of serial transmission when the last stop bit was sent
   if (_rs485TEpin != 0xFF) {
     // disable RS485 transmitter if pin defined

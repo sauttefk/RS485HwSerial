@@ -62,8 +62,7 @@
   bool Serial3_available() __attribute__((weak));
 #endif
 
-void serialEventRun(void)
-{
+void serialEventRun(void) {
 #if defined(HAVE_RS485HWSERIAL0)
   if (Serial0_available && serialEvent && Serial0_available()) serialEvent();
 #endif
@@ -87,8 +86,7 @@ void serialEventRun(void)
 
 // Actual interrupt handlers //////////////////////////////////////////////////////////////
 
-void RS485HwSerial::_tx_udr_empty_irq(void)
-{
+void RS485HwSerial::_tx_udr_empty_irq(void) {
   // If interrupts are enabled, there must be more data in the output
   // buffer. Send the next byte
   unsigned char c = _tx_buffer[_tx_buffer_tail];
@@ -115,10 +113,7 @@ void RS485HwSerial::_tx_udr_empty_irq(void)
 
 // Public Methods //////////////////////////////////////////////////////////////
 
-void RS485HwSerial::begin(unsigned long baud, byte config, uint8_t rs485TEpin)
-{
-  _rs485TEpin = rs485TEpin;
-
+void RS485HwSerial::begin(unsigned long baud, byte config) {
   // Try u2x mode first
   uint16_t baud_setting = (F_CPU / 4 / baud - 1) / 2;
   *_ucsra = 1 << U2X0;
@@ -151,15 +146,22 @@ void RS485HwSerial::begin(unsigned long baud, byte config, uint8_t rs485TEpin)
   sbi(*_ucsrb, RXCIE0);
   cbi(*_ucsrb, UDRIE0);
 
+  transmitterEnable(_rs485TEpin);
+}
+
+void RS485HwSerial::transmitterEnable(uint8_t rs485TEpin) {
+  _rs485TEpin = rs485TEpin;
+
   if (_rs485TEpin != 0xFF) {
     pinMode(_rs485TEpin, OUTPUT);
-    digitalWrite(_rs485TEpin, LOW);  // disable transmitter
-    sbi(*_ucsrb, TXCIE0);            // enable USART TX complete interrupt
+    digitalWrite(_rs485TEpin, LOW); // disable transmitter
+    if (bit_is_set(*_ucsrb, TXEN0)) {
+      sbi(*_ucsrb, TXCIE0);         // enable USART TX complete interrupt
+    }
   }
 }
 
-void RS485HwSerial::end()
-{
+void RS485HwSerial::end() {
   // wait for transmission of outgoing data
   flush();
 
@@ -167,19 +169,20 @@ void RS485HwSerial::end()
   cbi(*_ucsrb, TXEN0);
   cbi(*_ucsrb, RXCIE0);
   cbi(*_ucsrb, UDRIE0);
-  cbi(*_ucsrb, TXCIE0);
+  if (_rs485TEpin != 0xFF) {
+    cbi(*_ucsrb, TXCIE0);
+    digitalWrite(_rs485TEpin, LOW); // disable transmitter
+  }
 
   // clear any received data
   _rx_buffer_head = _rx_buffer_tail;
 }
 
-int RS485HwSerial::available(void)
-{
+int RS485HwSerial::available(void) {
   return ((unsigned int)(SERIAL_RX_BUFFER_SIZE + _rx_buffer_head - _rx_buffer_tail)) % SERIAL_RX_BUFFER_SIZE;
 }
 
-int RS485HwSerial::peek(void)
-{
+int RS485HwSerial::peek(void) {
   if (_rx_buffer_head == _rx_buffer_tail) {
     return -1;
   } else {
@@ -187,8 +190,7 @@ int RS485HwSerial::peek(void)
   }
 }
 
-int RS485HwSerial::read(void)
-{
+int RS485HwSerial::read(void) {
   // if the head isn't ahead of the tail, we don't have any characters
   if (_rx_buffer_head == _rx_buffer_tail) {
     return -1;
@@ -199,8 +201,7 @@ int RS485HwSerial::read(void)
   }
 }
 
-int RS485HwSerial::availableForWrite(void)
-{
+int RS485HwSerial::availableForWrite(void) {
   tx_buffer_index_t head;
   tx_buffer_index_t tail;
 
@@ -212,8 +213,7 @@ int RS485HwSerial::availableForWrite(void)
   return tail - head - 1;
 }
 
-void RS485HwSerial::flush()
-{
+void RS485HwSerial::flush() {
   // If we have never written a byte, no need to flush. This special
   // case is needed since there is no way to force the TXC (transmit
   // complete) bit to 1 during initialization
@@ -232,8 +232,7 @@ void RS485HwSerial::flush()
   // the hardware finished tranmission (TXC is set).
 }
 
-size_t RS485HwSerial::write(uint8_t c)
-{
+size_t RS485HwSerial::write(uint8_t c) {
   _written = true;
   if (_rs485TEpin != 0xFF) {
     digitalWrite(_rs485TEpin, HIGH); // RS485 transceiver's transmit enable

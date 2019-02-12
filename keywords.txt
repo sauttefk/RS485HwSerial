@@ -16,6 +16,7 @@ RS485HwSerial3  KEYWORD1
 ################################################
 
 begin 	KEYWORD2
+transmitterEnable KEYWORD2
 end  KEYWORD2
 available  KEYWORD2
 peek  KEYWORD2
