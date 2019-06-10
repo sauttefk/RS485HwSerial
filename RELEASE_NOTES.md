@@ -1,3 +1,5 @@
+- v1.1.2
+  * edited README.MD
 - v1.1.1
   * changed spaces to tabs in keywords.txt so they work 
 - v1.1.0
