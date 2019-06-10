@@ -12,7 +12,7 @@ This is a major improvement over
 another extra delay for the last byte to be shifted out
 
 #### Alternative hardware solution
-Instead of using a microcontroller based solution for controlling the `TE` signal like this or any other RS485 library, you may use a RS485 transceiver with auto direction control like the [MAX13487E](https://www.maximintegrated.com/en/products/interface/transceivers/MAX13487E.html).
+Instead of using a microcontroller based solution for controlling the `TE` signal like this or any other RS485 library, you may use a RS485 transceiver with _auto direction control_ like the [MAX13487E](https://www.maximintegrated.com/en/products/interface/transceivers/MAX13487E.html).
 
 ## Installation
 * Download the RS485HwSerial master zip file.
